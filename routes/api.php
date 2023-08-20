@@ -18,3 +18,4 @@ use App\Http\Controllers\ApiController;
 Route::get('/products', [ApiController::class, 'getProducts']);
 Route::get('/categories', [ApiController::class, 'getCategories']);
 Route::get('/users', [ApiController::class, 'getUsers']);
+Route::get('/slides', [ApiController::class, 'getSlides']);
