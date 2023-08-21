@@ -19,3 +19,4 @@ Route::get('/products', [ApiController::class, 'getProducts']);
 Route::get('/categories', [ApiController::class, 'getCategories']);
 Route::get('/users', [ApiController::class, 'getUsers']);
 Route::get('/slides', [ApiController::class, 'getSlides']);
+Route::get('products/category/{categoryId}', [ApiController::class, 'getProductsByCategory']);
