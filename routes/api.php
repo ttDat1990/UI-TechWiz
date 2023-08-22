@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiController;
+use App\Http\Controllers\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,8 +16,16 @@ use App\Http\Controllers\ApiController;
 |
 */
 
-Route::get('/products', [ApiController::class, 'getProducts']);
+Route::get('/products', [ProductController::class, 'getProducts']);
+Route::post('/products', [ProductController::class, 'store']);
+Route::put('/products/{id}', [ProductController::class, 'update']);
+Route::get('/products/{id}', [ProductController::class, 'destroy']);
+
+Route::get('products/category/{categoryId}', [ProductController::class, 'getProductsByCategory']);
+Route::get('products/{id}', [ProductController::class, 'productDetail']);
+
 Route::get('/categories', [ApiController::class, 'getCategories']);
 Route::get('/users', [ApiController::class, 'getUsers']);
 Route::get('/slides', [ApiController::class, 'getSlides']);
-Route::get('products/category/{categoryId}', [ApiController::class, 'getProductsByCategory']);
+
+
