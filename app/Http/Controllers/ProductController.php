@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
 
 class ProductController extends Controller
 {
@@ -39,30 +41,53 @@ class ProductController extends Controller
         return response()->json($product);
     }
 
-    public function store(Request $request)
+    public function add(Request $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
+        // $validatedData = $request->validate([
+        //     'name' => 'required|string|max:255',
+        //     'price' => 'required|numeric',
+        //     'category_id' => 'required|integer',
+        //     'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        // ]);
+
+        // $imagePath = $request->file('image')->store('images', 'public');
+        // $imageName = pathinfo($imagePath, PATHINFO_FILENAME) . '_' . time() . '.' . $request->file('image')->getClientOriginalExtension();
+
+        // Storage::disk('public')->move($imagePath, 'images/' . $imageName);
+
+        // $product = new Product([
+        //     'name' => $validatedData['name'],
+        //     'price' => $validatedData['price'],
+        //     'category_id' => $validatedData['category_id'],
+        //     'image' => $imageName,
+        // ]);
+
+        // $product->save();
+
+        // return response()->json(['message' => 'Product created successfully'], 201);
+
+        $request->validate([
+            'name' => 'required|string',
             'price' => 'required|numeric',
-            'category_id' => 'required|integer',
+            'category_id' => 'required|exists:categories,id',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $imagePath = $request->file('image')->store('images', 'public');
-        $imageName = pathinfo($imagePath, PATHINFO_FILENAME) . '_' . time() . '.' . $request->file('image')->getClientOriginalExtension();
+        $image = $request->file('image');
+        $imageName = time() . '_' . $image->getClientOriginalName();
 
-        Storage::disk('public')->move($imagePath, 'images/' . $imageName);
+        // Lưu hình ảnh vào thư mục public/images
+        $image->move(public_path('images'), $imageName);
 
-        $product = new Product([
-            'name' => $validatedData['name'],
-            'price' => $validatedData['price'],
-            'category_id' => $validatedData['category_id'],
-            'image' => $imageName,
-        ]);
-
+        // Lưu thông tin vào bảng products
+        $product = new Product();
+        $product->name = $request->input('name');
+        $product->price = $request->input('price');
+        $product->category_id = $request->input('category_id');
+        $product->image = $imageName;
         $product->save();
 
-        return response()->json(['message' => 'Product created successfully'], 201);
+        return response()->json(['message' => 'Product created successfully']);
     }
 
     public function update(Request $request, $id)
@@ -85,5 +110,8 @@ class ProductController extends Controller
 
         return response()->json(['message' => 'Product deleted successfully']);
     }
+
+    
+
 
 }
