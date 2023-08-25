@@ -43,29 +43,6 @@ class ProductController extends Controller
 
     public function add(Request $request)
     {
-        // $validatedData = $request->validate([
-        //     'name' => 'required|string|max:255',
-        //     'price' => 'required|numeric',
-        //     'category_id' => 'required|integer',
-        //     'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-        // ]);
-
-        // $imagePath = $request->file('image')->store('images', 'public');
-        // $imageName = pathinfo($imagePath, PATHINFO_FILENAME) . '_' . time() . '.' . $request->file('image')->getClientOriginalExtension();
-
-        // Storage::disk('public')->move($imagePath, 'images/' . $imageName);
-
-        // $product = new Product([
-        //     'name' => $validatedData['name'],
-        //     'price' => $validatedData['price'],
-        //     'category_id' => $validatedData['category_id'],
-        //     'image' => $imageName,
-        // ]);
-
-        // $product->save();
-
-        // return response()->json(['message' => 'Product created successfully'], 201);
-
         $request->validate([
             'name' => 'required|string',
             'price' => 'required|numeric',
@@ -76,10 +53,8 @@ class ProductController extends Controller
         $image = $request->file('image');
         $imageName = time() . '_' . $image->getClientOriginalName();
 
-        // Lưu hình ảnh vào thư mục public/images
         $image->move(public_path('images'), $imageName);
 
-        // Lưu thông tin vào bảng products
         $product = new Product();
         $product->name = $request->input('name');
         $product->price = $request->input('price');
